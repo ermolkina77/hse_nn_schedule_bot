@@ -25,14 +25,14 @@ def start(message):
     gr7 = types.InlineKeyboardButton('20ПИ1', callback_data='20ПИ1')
     gr8 = types.InlineKeyboardButton('20ПИ2', callback_data='20ПИ2')
     markup.row(gr7, gr8)
-    gr9 = types.InlineKeyboardButton('Ссылка на расписание в "Таблицах"',
+    gr9 = types.InlineKeyboardButton('🌐 Ссылка на расписание в "Таблицах"',
                                      url='https://docs.google.com/spreadsheets/d/1Iyyqs-DqTkhnoMRbpdyXK1lzF4waM05MzwDCzwWPC4A/edit#gid=0')
     markup.row(gr9)
-    gr10 = types.InlineKeyboardButton('Календарь четности недель', callback_data='calendar')
+    gr10 = types.InlineKeyboardButton('🗓️ Календарь четности недель', callback_data='calendar')
     markup.row(gr10)
-    gr11 = types.InlineKeyboardButton('Расписание времни пар', callback_data='time')
+    gr11 = types.InlineKeyboardButton('⏰ Расписание времни пар', callback_data='time')
     markup.row(gr11)
-    gr12 = types.InlineKeyboardButton('Изменить заметку', callback_data='note')
+    gr12 = types.InlineKeyboardButton('✍️ Изменить заметку', callback_data='note')
     markup.row(gr12)
     markup.add()
     bot.send_message(message.chat.id,
@@ -76,62 +76,121 @@ def start(message):
                                   text='Выберите день недели', reply_markup=markup)
 
         elif callback.data == 'Monday221':
-
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more221m')
+            markup.row(m)
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
             cur.execute(main_sql + str(1) + day_sql + str(1))
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more221m':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(1) + day_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Tuesday221':
-
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more221tu')
+            markup.row(m)
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
             cur.execute(main_sql + str(1) + day_sql + str(2))
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more221tu':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(1) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Wednesday221':
-
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more221we')
+            markup.row(m)
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
             cur.execute(main_sql + str(1) + day_sql + str(3))
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more221we':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(1) + day_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Thursday221':
-
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more221th')
+            markup.row(m)
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
             cur.execute(main_sql + str(1) + day_sql + str(4))
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more221th':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(1) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Friday221':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more221f')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -139,13 +198,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more221f':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(1) + day_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Week221':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more221w')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -153,11 +227,23 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more221w':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == '22ПИ2':
 
@@ -174,6 +260,9 @@ def start(message):
                                   text='Выберите день недели', reply_markup=markup)
 
         elif callback.data == 'Monday222':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more222m')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -181,13 +270,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more222m':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(2) + day_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Tuesday222':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more222tu')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -195,13 +299,29 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more222tu':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(2) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
+
 
         elif callback.data == 'Wednesday222':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more222we')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -209,13 +329,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more222we':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(2) + day_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Thursday222':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more222th')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -223,13 +358,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more222th':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(2) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Friday222':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more222f')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -237,13 +387,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more222f':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(2) + day_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Week222':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more222w')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -251,11 +416,23 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more222w':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == '22ПИ3':
 
@@ -272,6 +449,9 @@ def start(message):
                                   text='Выберите день недели', reply_markup=markup)
 
         elif callback.data == 'Monday223':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more223m')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -279,13 +459,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more223m':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(3) + day_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Tuesday223':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more223tu')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -293,13 +488,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more223tu':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(3) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Wednesday223':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more223we')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -307,13 +517,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more223we':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(3) + day_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Thursday223':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more223th')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -321,13 +546,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more223th':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(3) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Friday223':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more223f')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -335,13 +575,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more223f':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(3) + day_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Week223':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more223w')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -349,11 +604,23 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more223w':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == '21ПИ1':
 
@@ -372,6 +639,9 @@ def start(message):
                                   text='Выберите день недели', reply_markup=markup)
 
         elif callback.data == 'Monday211':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more211m')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -379,13 +649,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more211m':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(4) + day_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Tuesday211':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more211tu')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -393,13 +678,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more211tu':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(4) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Wednesday211':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more211we')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -407,13 +707,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more211we':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(4) + day_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Thursday211':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more211th')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -421,13 +736,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more211th':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(4) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Friday211':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more211f')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -435,13 +765,29 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more211f':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(4) + day_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
+
 
         elif callback.data == 'Saturday211':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more211s')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -449,13 +795,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на субботу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more211s':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(4) + day_sql + str(6))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Week211':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more211w')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -463,11 +824,23 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more211w':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == '21ПИ2':
 
@@ -486,6 +859,9 @@ def start(message):
                                   text='Выберите день недели', reply_markup=markup)
 
         elif callback.data == 'Monday212':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more212m')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -493,13 +869,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more212m':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(5) + day_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Tuesday212':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more212tu')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -507,13 +898,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more212tu':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(5) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Wednesday212':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more212we')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -521,13 +927,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more212we':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(5) + day_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Thursday212':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more212th')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -535,13 +956,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more212th':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(5) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Friday212':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more212f')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -549,13 +985,57 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more212f':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(5) + day_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
+
+        elif callback.data == 'Saturday212':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more212s')
+            markup.row(m)
+
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(5) + day_sql + str(6))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text='Ваше расписание на субботу')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more212s':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(5) + day_sql + str(6))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Week212':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more212w')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -563,11 +1043,23 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more212w':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
 
         elif callback.data == '21ПИ3':
@@ -587,6 +1079,9 @@ def start(message):
                                   text='Выберите день недели', reply_markup=markup)
 
         elif callback.data == 'Monday213':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more213m')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -594,13 +1089,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more213m':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(6) + day_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Tuesday213':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more213tu')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -608,13 +1118,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more213tu':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(6) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Wednesday213':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more213we')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -622,13 +1147,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more213we':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(6) + day_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Thursday213':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more213th')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -636,13 +1176,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more213th':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(6) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Friday213':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more213f')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -650,13 +1205,57 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more213f':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(6) + day_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
+
+        elif callback.data == 'Saturday213':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more213s')
+            markup.row(m)
+
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(6) + day_sql + str(6))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text='Ваше расписание на субботу')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more213s':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(6) + day_sql + str(6))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Week213':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more213w')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -664,11 +1263,23 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more213w':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(6))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == '20ПИ1':
 
@@ -683,6 +1294,9 @@ def start(message):
                                   text='Выберите день недели', reply_markup=markup)
 
         elif callback.data == 'Monday201':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more201m')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -690,15 +1304,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
 
+        elif callback.data == 'more201m':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(7) + day_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
 
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Wednesday201':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more201tu')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -706,13 +1333,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more201we':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(7) + day_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Friday201':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more201f')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -720,13 +1362,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more201f':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(7) + day_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Week201':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more201w')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -734,11 +1391,23 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more201w':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(7))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == '20ПИ2':
 
@@ -753,6 +1422,9 @@ def start(message):
                                   text='Выберите день недели', reply_markup=markup)
 
         elif callback.data == 'Monday202':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more202m')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -760,15 +1432,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
 
+        elif callback.data == 'more202m':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(8) + day_sql + str(1))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
 
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Wednesday202':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more202we')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -776,13 +1461,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more202we':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(8) + day_sql + str(3))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Friday202':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more202f')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -790,13 +1490,28 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more202f':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(8) + day_sql + str(5))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'Week202':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more202w')
+            markup.row(m)
 
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
@@ -804,11 +1519,23 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'Группа: {row[1]}\nНеделя: {row[2]}\nДень: {row[3]}\nВремя пары: <b><i>с {row[4]} по {row[5]}</i></b>\nАудитория: <b><i>{row[6]}, {row[7]}</i></b>\nДисциплина: <b><i>{row[8]} — {row[9]}</i></b>\nПреподаватель: {row[10]}\nЗаметка: {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
-            bot.send_message(message.chat.id, info, parse_mode='html')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more202w':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(8))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
 
         elif callback.data == 'note':
             msg = bot.send_message(message.chat.id, 'Введите пин')
