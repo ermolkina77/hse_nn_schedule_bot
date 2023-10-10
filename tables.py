@@ -38,4 +38,7 @@ with (sq.connect("shedule.db") as con):
                classroom_name TEXT,
                classroom_address TEXT);
             """)
+    cur.execute("""DELETE FROM subject_test""")
+    cur.execute("""DELETE FROM type_test""")
+    cur.execute("""DELETE FROM teacher_test""")
     con.commit()
