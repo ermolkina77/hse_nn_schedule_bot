@@ -90,8 +90,35 @@ with (sq.connect("shedule.db") as con):
                             "INSERT INTO teacher_test (id, teacher_name) VALUES  (" + str(t_id) + ", '" + res[2] + "')")
                         t_id = t_id + 1
 
-    cur.execute("SELECT * FROM subject_test")
-    print(cur.fetchall())
+    r_id = 1
+    for p in range(0, 3):
+        values_list = wsheet[p].get('F20:F63')
+        k = len(values_list)
+
+        for i in range(0, k):
+            if len(values_list[i]) != 0:
+                data = values_list[i][0]
+                res = data.split('  ')
+
+                if len(res) == 2:
+                    if res[1] == 'Л':
+                        address = 'Львовская, 1В'
+                    if res[1] == 'Р':
+                        address = 'Родионова, 13б'
+                    cur.execute("SELECT classroom_name, classroom_address FROM classroom_test WHERE classroom_name = '" + res[0] + "' AND classroom_address = '" + address + "'")
+                    check = cur.fetchall()
+                    if len(check) == 0:
+                        cur.execute(
+                            "INSERT INTO classroom_test (id, classroom_name, classroom_address) VALUES  (" + str(r_id) + ", '" + res[0] + "', '" + address + "')")
+                        r_id = r_id + 1
+                else:
+                    cur.execute("SELECT classroom_name FROM classroom_test WHERE classroom_name = '" + res[0] + "'")
+                    check = cur.fetchall()
+                    if len(check) == 0:
+                        cur.execute(
+                            "INSERT INTO classroom_test (id, classroom_name) VALUES  (" + str(
+                                r_id) + ", '" + res[0] + "')")
+                        r_id = r_id + 1
 
     # cur.execute("SELECT * FROM class_test")
     # print(cur.fetchall())
