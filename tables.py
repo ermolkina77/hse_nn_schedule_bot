@@ -11,7 +11,6 @@ with (sq.connect("shedule.db") as con):
 
     cur.execute("""CREATE TABLE IF NOT EXISTS lesson_test(
            id INT PRIMARY KEY,
-           lesson_name TEXT,
            lesson_time TEXT);
         """)
     con.commit()
