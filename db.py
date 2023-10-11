@@ -105,16 +105,16 @@ with (sq.connect("shedule.db") as con):
     #                       "INSERT INTO teacher_test (id, teacher_name) VALUES  (" + str(t_id) + ", '" + res[2] + "')")
     #                   t_id = t_id + 1
 
-    # r_id = 1
-    # for p in range(0, 3):
-    #   values_list = wsheet[p].get('F20:F63')
+    #r_id = 1
+    #for p in range(0, 3):
+    #   values_list = wsheet[p].get('F20:F43')
     #   k = len(values_list)
-    #
+
     #   for i in range(0, k):
     #       if len(values_list[i]) != 0:
     #           data = values_list[i][0]
     #           res = data.split('  ')
-
+    #
     #           if len(res) == 2:
     #               if res[1] == 'Л':
     #                   address = 'Львовская, 1В'
@@ -139,37 +139,68 @@ with (sq.connect("shedule.db") as con):
     dn = ['B20', 'B28', 'B33', 'B38', 'B46', 'B55']
     gr = ['E', 'H', 'K']
     gr1 = ['F', 'I', 'L']
+    grid = 1
+    for i in range(0, 12):
+        if (pl + i) >= 20 and (pl + i) <= 22:
+            dw = 1
+        elif (pl + i) == 23:
+            dw = 2
+        elif (pl + i) == 24:
+            dw = 3
+        elif (pl + i) >= 25 and (pl + i) <= 29:
+            dw = 4
+        elif (pl + i) >= 30 and (pl + i) <= 31:
+            dw = 5
 
-    # for i in range(0, 12):
-
-    #    if (pl + i) >= 20 and (pl + i) <= 22:
-    #       dw = 'Понедельник'
-    #   elif (pl + i) == 23:
-    #       dw = 'Вторник'
-    #   elif (pl + i) == 24:
-    #       dw = 'Среда'
-    #   elif (pl + i) >= 25 and (pl + i) <= 29:
-    #       dw = 'Четверг'
-    #   elif (pl + i) >= 30 and (pl + i) <= 31:
-    #       dw = 'Пятница'
-    #
-    #   n3 = wsheet[0].get('K' + str(pl + i))
-    #   if len(n3) > 0:
-    #       n2 = wsheet[0].get('C' + str(pl+i))[0][0]
-    #       n31 = n3[0][0]
-    #       n32 = n31.split('  ')
-    #       n4 = wsheet[0].get('L' + str(pl + i))
-    #       n41 = n4[0][0]
-    #       n42 = n41.split('  ')
-    #       if len(n32) >= 3 & len(n42) == 2:
-    #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0], n42[1]]
-    #           print(a)
-    #       elif len(n32) == 1 & len(n42) == 1:
-    #           a = [dw, n2, n32[0], n42[0]]
-    #           print(a)
-    #       elif len(n32) >= 3 & len(n42) == 1:
-    #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
-    #           print(a)
+        n3 = wsheet[0].get('E' + str(pl + i))
+        if len(n3) > 0:
+            n2 = wsheet[0].get('C' + str(pl+i))[0][0]
+            n31 = n3[0][0]
+            n32 = n31.split('  ')
+            n4 = wsheet[0].get('F' + str(pl + i))
+            n41 = n4[0][0]
+            n42 = n41.split('  ')
+            if len(n32) >= 3 & len(n42) == 2:
+                a = [dw, n2, n32[0], n32[1], n32[2], n42[0], n42[1]]
+                if n42[1] == 'Л':
+                    n42[1] = 'Львовская, 1В'
+                elif n42[1] == 'Р':
+                    n42[1] = 'Родионова, 13б'
+                cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
+                lid = cur.fetchone()
+                cur.execute("SELECT id FROM subject_test WHERE subject_name = '" + n32[0] + "'")
+                sid = cur.fetchone()
+                cur.execute("SELECT id FROM type_test WHERE type_name = '" + n32[1] + "'")
+                tid = cur.fetchone()
+                cur.execute("SELECT id FROM teacher_test WHERE teacher_name = '" + n32[2] + "'")
+                tcid = cur.fetchone()
+                cur.execute("SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "' AND classroom_address = '" + n42[1] + "'")
+                clid = cur.fetchone()
+                print(lid[0], ' ', sid[0], ' ', tid[0], ' ', tcid[0], ' ', clid[0], ' ', a)
+            elif len(n32) == 1 & len(n42) == 1:
+                a = [dw, n2, n32[0], n42[0]]
+                cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
+                lid = cur.fetchone()
+                cur.execute("SELECT id FROM subject_test WHERE subject_name = '" + n32[0] + "'")
+                sid = cur.fetchone()
+                cur.execute(
+                    "SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "'")
+                clid = cur.fetchone()
+                print(lid[0], '  ', sid[0], '  ', clid[0], ' ',  a)
+            elif len(n32) >= 3 & len(n42) == 1:
+                a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
+                cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
+                lid = cur.fetchone()
+                cur.execute("SELECT id FROM subject_test WHERE subject_name = '" + n32[0] + "'")
+                sid = cur.fetchone()
+                cur.execute("SELECT id FROM type_test WHERE type_name = '" + n32[1] + "'")
+                tid = cur.fetchone()
+                cur.execute("SELECT id FROM teacher_test WHERE teacher_name = '" + n32[2] + "'")
+                tcid = cur.fetchone()
+                cur.execute(
+                    "SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "'")
+                clid = cur.fetchone()
+                print(lid[0], ' ', sid[0], ' ', tid[0], ' ', tcid[0], ' ', clid[0], ' ', a)
 
     # for i in range(0, 24):
     #

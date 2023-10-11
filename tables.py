@@ -46,5 +46,18 @@ with (sq.connect("shedule.db") as con):
                    class_code TEXT);
                 """)
 
-
+    cur.execute("""CREATE TABLE IF NOT EXISTS schedule_test(
+                   id TEXT PRIMARY KEY,
+                   class_id INT,
+                   day_id INT,
+                   lesson_id INT,
+                   classroom_id INT,
+                   subject_id INT,
+                   type_id INT,
+                   teacher_id INT,
+                   status TEXT,
+                   note TEXT);
+                """)
     con.commit()
+
+
