@@ -5,7 +5,8 @@ with (sq.connect("shedule.db") as con):
 
     cur.execute("""CREATE TABLE IF NOT EXISTS day_test(
        id INT PRIMARY KEY,
-       day_name TEXT);
+       day_name TEXT,
+       day_code TEXT);
     """)
     con.commit()
 
@@ -38,5 +39,12 @@ with (sq.connect("shedule.db") as con):
                classroom_name TEXT,
                classroom_address TEXT);
             """)
-    cur.execute("""DELETE FROM classroom_test""")
+
+    cur.execute("""CREATE TABLE IF NOT EXISTS class_test(
+                   id INT PRIMARY KEY,
+                   class_name TEXT,
+                   class_code TEXT);
+                """)
+
+
     con.commit()
