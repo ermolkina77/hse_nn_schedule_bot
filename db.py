@@ -55,70 +55,106 @@ with (sq.connect("shedule.db") as con):
     #   if len(check) == 0:
     #       cur.execute("INSERT INTO lesson_test (id, lesson_time) VALUES  (" + str(i + 1) + ", '" + res + "')")
 
-    sub_id = 1
-    t_id = 1
-    type_id = 1
+    #sub_id = 1
+    #t_id = 1
+    #type_id = 1
 
-    for p in range(0, 3):
-        values_list = wsheet[p].get('E20:E63')
-        k = len(values_list)
+    #for p in range(0, 3):
+    #    values_list = wsheet[p].get('E20:E63')
+    #   k = len(values_list)
 
-        for i in range(0, k):
-            if len(values_list[i]) != 0:
-                data = values_list[i][0]
-                res = data.split('  ')
+    #   for i in range(0, k):
+    #       if len(values_list[i]) != 0:
+    #           data = values_list[i][0]
+    #           res = data.split('  ')
 
-                cur.execute("SELECT subject_name FROM subject_test WHERE subject_name = '" + res[0] + "'")
-                check = cur.fetchall()
-                if len(check) == 0:
-                    cur.execute(
-                        "INSERT INTO subject_test (id, subject_name) VALUES  (" + str(sub_id) + ", '" + res[0] + "')")
-                    sub_id = sub_id + 1
+    #           cur.execute("SELECT subject_name FROM subject_test WHERE subject_name = '" + res[0] + "'")
+    #           check = cur.fetchall()
+    #           if len(check) == 0:
+    #               cur.execute(
+    #                   "INSERT INTO subject_test (id, subject_name) VALUES  (" + str(sub_id) + ", '" + res[0] + "')")
+    #               sub_id = sub_id + 1
 
-                if len(res) > 1:
-                    cur.execute("SELECT type_name FROM type_test WHERE type_name = '" + res[1] + "'")
-                    check = cur.fetchall()
-                    if len(check) == 0:
-                        cur.execute(
-                            "INSERT INTO type_test (id, type_name) VALUES  (" + str(type_id) + ", '" + res[1] + "')")
-                        type_id = type_id + 1
+    #           if len(res) > 1:
+    #               cur.execute("SELECT type_name FROM type_test WHERE type_name = '" + res[1] + "'")
+    #               check = cur.fetchall()
+    #               if len(check) == 0:
+    #                   cur.execute(
+    #                       "INSERT INTO type_test (id, type_name) VALUES  (" + str(type_id) + ", '" + res[1] + "')")
+    #                   type_id = type_id + 1
 
-                    cur.execute("SELECT teacher_name FROM teacher_test WHERE teacher_name = '" + res[2] + "'")
-                    check = cur.fetchall()
-                    if len(check) == 0:
-                        cur.execute(
-                            "INSERT INTO teacher_test (id, teacher_name) VALUES  (" + str(t_id) + ", '" + res[2] + "')")
-                        t_id = t_id + 1
+    #               cur.execute("SELECT teacher_name FROM teacher_test WHERE teacher_name = '" + res[2] + "'")
+    #               check = cur.fetchall()
+    #               if len(check) == 0:
+    #                   cur.execute(
+    #                       "INSERT INTO teacher_test (id, teacher_name) VALUES  (" + str(t_id) + ", '" + res[2] + "')")
+    #                   t_id = t_id + 1
 
-    r_id = 1
-    for p in range(0, 3):
-        values_list = wsheet[p].get('F20:F63')
-        k = len(values_list)
+    #r_id = 1
+    #for p in range(0, 3):
+    #   values_list = wsheet[p].get('F20:F63')
+    #   k = len(values_list)
+    #
+    #   for i in range(0, k):
+    #       if len(values_list[i]) != 0:
+    #           data = values_list[i][0]
+    #           res = data.split('  ')
 
-        for i in range(0, k):
-            if len(values_list[i]) != 0:
-                data = values_list[i][0]
-                res = data.split('  ')
+    #           if len(res) == 2:
+    #               if res[1] == 'Л':
+    #                   address = 'Львовская, 1В'
+    #               if res[1] == 'Р':
+    #                   address = 'Родионова, 13б'
+    #               cur.execute("SELECT classroom_name, classroom_address FROM classroom_test WHERE classroom_name = '" + res[0] + "' AND classroom_address = '" + address + "'")
+    #               check = cur.fetchall()
+    #               if len(check) == 0:
+    #                   cur.execute(
+    #                       "INSERT INTO classroom_test (id, classroom_name, classroom_address) VALUES  (" + str(r_id) + ", '" + res[0] + "', '" + address + "')")
+    #                   r_id = r_id + 1
+    #           else:
+    #               cur.execute("SELECT classroom_name FROM classroom_test WHERE classroom_name = '" + res[0] + "'")
+    #               check = cur.fetchall()
+    #               if len(check) == 0:
+    #                   cur.execute(
+    #                       "INSERT INTO classroom_test (id, classroom_name) VALUES  (" + str(
+    #                           r_id) + ", '" + res[0] + "')")
+    #                   r_id = r_id + 1
 
-                if len(res) == 2:
-                    if res[1] == 'Л':
-                        address = 'Львовская, 1В'
-                    if res[1] == 'Р':
-                        address = 'Родионова, 13б'
-                    cur.execute("SELECT classroom_name, classroom_address FROM classroom_test WHERE classroom_name = '" + res[0] + "' AND classroom_address = '" + address + "'")
-                    check = cur.fetchall()
-                    if len(check) == 0:
-                        cur.execute(
-                            "INSERT INTO classroom_test (id, classroom_name, classroom_address) VALUES  (" + str(r_id) + ", '" + res[0] + "', '" + address + "')")
-                        r_id = r_id + 1
-                else:
-                    cur.execute("SELECT classroom_name FROM classroom_test WHERE classroom_name = '" + res[0] + "'")
-                    check = cur.fetchall()
-                    if len(check) == 0:
-                        cur.execute(
-                            "INSERT INTO classroom_test (id, classroom_name) VALUES  (" + str(
-                                r_id) + ", '" + res[0] + "')")
-                        r_id = r_id + 1
+    pl = 20
+    dn = ['B20', 'B28', 'B33', 'B38', 'B46', 'B55']
+    for i in range(0, 34):
+
+        if pl + i >= 20 & pl + i <= 26:
+            dw = 'Понедельник'
+        if pl + i >= 28 & pl + i <= 33:
+            dw = 'Вторник'
+        if pl + i >= 36 & pl + i <= 41:
+            dw = 'Среда'
+        if pl + i >= 44 & pl + i <= 49:
+            dw = 'Четверг'
+        if pl + i >= 52 & pl + i <= 57:
+            dw = 'Пятница'
+        if pl + i >= 60 & pl + i <= 65:
+            dw = 'Суббота'
+
+        n3 = wsheet[0].get('E' + str(pl + i))
+        if len(n3) > 0:
+            n2 = wsheet[0].get('C' + str(pl+i))[0][0]
+            n3 = wsheet[0].get('E' + str(pl+i))
+            n31 = n3[0][0]
+            n32 = n31.split('  ')
+            n4 = wsheet[0].get('F' + str(pl + i))
+            n41 = n4[0][0]
+            n42 = n41.split('  ')
+            if len(n32) >= 3 & len(n42) == 2:
+                a = [dw, n2, n32[0], n32[1], n32[2], n42[0], n42[1]]
+                print(a)
+            elif len(n32) == 1 & len(n42) == 1:
+                a = [dw, n2, n32[0], n42[0]]
+                print(a)
+            elif len(n32) >= 3 & len(n42) == 1:
+                a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
+                print(a)
 
     # cur.execute("SELECT * FROM class_test")
     # print(cur.fetchall())
