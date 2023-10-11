@@ -122,28 +122,92 @@ with (sq.connect("shedule.db") as con):
 
     pl = 20
     dn = ['B20', 'B28', 'B33', 'B38', 'B46', 'B55']
-    for i in range(0, 34):
+    gr = ['E', 'H', 'K']
+    gr1 = ['F', 'I', 'L']
 
-        if pl + i >= 20 & pl + i <= 26:
+    #for i in range(0, 12):
+
+    #    if (pl + i) >= 20 and (pl + i) <= 22:
+    #       dw = 'Понедельник'
+    #   elif (pl + i) == 23:
+    #       dw = 'Вторник'
+    #   elif (pl + i) == 24:
+    #       dw = 'Среда'
+    #   elif (pl + i) >= 25 and (pl + i) <= 29:
+    #       dw = 'Четверг'
+    #   elif (pl + i) >= 30 and (pl + i) <= 31:
+    #       dw = 'Пятница'
+    #
+    #   n3 = wsheet[0].get('K' + str(pl + i))
+    #   if len(n3) > 0:
+    #       n2 = wsheet[0].get('C' + str(pl+i))[0][0]
+    #       n31 = n3[0][0]
+    #       n32 = n31.split('  ')
+    #       n4 = wsheet[0].get('L' + str(pl + i))
+    #       n41 = n4[0][0]
+    #       n42 = n41.split('  ')
+    #       if len(n32) >= 3 & len(n42) == 2:
+    #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0], n42[1]]
+    #           print(a)
+    #       elif len(n32) == 1 & len(n42) == 1:
+    #           a = [dw, n2, n32[0], n42[0]]
+    #           print(a)
+    #       elif len(n32) >= 3 & len(n42) == 1:
+    #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
+    #           print(a)
+
+    #for i in range(0, 24):
+    #
+    #    if (pl + i) >= 20 and (pl + i) <= 23:
+    #       dw = 'Понедельник'
+    #   elif (pl + i) >= 24 and (pl + i) <= 26:
+    #       dw = 'Вторник'
+    #   elif (pl + i) == 27:
+    #       dw = 'Среда'
+    #   elif (pl + i) == 28:
+    #       dw = 'Четверг'
+    #   elif (pl + i) >= 29 and (pl + i) <= 34:
+    #       dw = 'Пятница'
+    #   elif (pl + i) >= 35 and (pl + i) <= 42:
+    #       dw = 'Суббота'
+
+    #   n3 = wsheet[1].get('K' + str(pl + i))
+    #   if len(n3) > 0:
+    #       n2 = wsheet[1].get('C' + str(pl+i))[0][0]
+    #       n31 = n3[0][0]
+    #       n32 = n31.split('  ')
+    #       n4 = wsheet[1].get('L' + str(pl + i))
+    #       n41 = n4[0][0]
+    #       n42 = n41.split('  ')
+    #       if len(n32) >= 3 & len(n42) == 2:
+    #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0], n42[1]]
+    #           print(a)
+    #       elif len(n32) == 1 & len(n42) == 1:
+    #           a = [dw, n2, n32[0], n42[0]]
+    #           print(a)
+    #       elif len(n32) >= 3 & len(n42) == 1:
+    #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
+    #           print(a)
+
+    for i in range(0, 14):
+
+        if (pl + i) >= 20 and (pl + i) <= 22:
             dw = 'Понедельник'
-        if pl + i >= 28 & pl + i <= 33:
+        elif (pl + i) >= 23 and (pl + i) <= 25:
             dw = 'Вторник'
-        if pl + i >= 36 & pl + i <= 41:
+        elif (pl + i) >= 26 and (pl + i) <= 27:
             dw = 'Среда'
-        if pl + i >= 44 & pl + i <= 49:
+        elif (pl + i) >= 28 and (pl + i) <= 30:
             dw = 'Четверг'
-        if pl + i >= 52 & pl + i <= 57:
+        elif (pl + i) >= 31 and (pl + i) <= 33:
             dw = 'Пятница'
-        if pl + i >= 60 & pl + i <= 65:
-            dw = 'Суббота'
 
-        n3 = wsheet[0].get('E' + str(pl + i))
+        n3 = wsheet[2].get('H' + str(pl + i))
         if len(n3) > 0:
-            n2 = wsheet[0].get('C' + str(pl+i))[0][0]
-            n3 = wsheet[0].get('E' + str(pl+i))
+            n2 = wsheet[2].get('C' + str(pl+i))[0][0]
             n31 = n3[0][0]
             n32 = n31.split('  ')
-            n4 = wsheet[0].get('F' + str(pl + i))
+            n4 = wsheet[2].get('I' + str(pl + i))
             n41 = n4[0][0]
             n42 = n41.split('  ')
             if len(n32) >= 3 & len(n42) == 2:
