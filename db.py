@@ -141,6 +141,7 @@ with (sq.connect("shedule.db") as con):
     gr1 = ['F', 'I', 'L']
     grid = 1
     for i in range(0, 12):
+        check = 0
         if (pl + i) >= 20 and (pl + i) <= 22:
             dw = 1
         elif (pl + i) == 23:
@@ -160,14 +161,23 @@ with (sq.connect("shedule.db") as con):
             n4 = wsheet[0].get('F' + str(pl + i))
             n41 = n4[0][0]
             n42 = n41.split('  ')
+            cur.execute("SELECT class_code FROM class_test WHERE class_name = '22ПИ1'")
+            clcode = cur.fetchone()
+            code = clcode[0]
+            cur.execute("SELECT day_code FROM day_test WHERE id = " + str(dw))
+            dcode = cur.fetchone()
+            code = code + dcode[0]
+            if len(n32) == 4:
+                note = n32[3]
+                check = 1
             if len(n32) >= 3 & len(n42) == 2:
-                a = [dw, n2, n32[0], n32[1], n32[2], n42[0], n42[1]]
                 if n42[1] == 'Л':
                     n42[1] = 'Львовская, 1В'
                 elif n42[1] == 'Р':
                     n42[1] = 'Родионова, 13б'
                 cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
                 lid = cur.fetchone()
+                code = code + str(lid[0]) + "m"
                 cur.execute("SELECT id FROM subject_test WHERE subject_name = '" + n32[0] + "'")
                 sid = cur.fetchone()
                 cur.execute("SELECT id FROM type_test WHERE type_name = '" + n32[1] + "'")
@@ -176,21 +186,29 @@ with (sq.connect("shedule.db") as con):
                 tcid = cur.fetchone()
                 cur.execute("SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "' AND classroom_address = '" + n42[1] + "'")
                 clid = cur.fetchone()
-                print(lid[0], ' ', sid[0], ' ', tid[0], ' ', tcid[0], ' ', clid[0], ' ', a)
+                if check == 1:
+                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная', note)
+                else:
+                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная')
             elif len(n32) == 1 & len(n42) == 1:
                 a = [dw, n2, n32[0], n42[0]]
                 cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
                 lid = cur.fetchone()
+                code = code + str(lid[0]) + "m"
                 cur.execute("SELECT id FROM subject_test WHERE subject_name = '" + n32[0] + "'")
                 sid = cur.fetchone()
                 cur.execute(
                     "SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "'")
                 clid = cur.fetchone()
-                print(lid[0], '  ', sid[0], '  ', clid[0], ' ',  a)
+                if check == 1:
+                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', clid[0], ' ', 'Основная',  note)
+                else:
+                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', clid[0], ' ', 'Основная')
             elif len(n32) >= 3 & len(n42) == 1:
                 a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
                 cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
                 lid = cur.fetchone()
+                code = code + str(lid[0]) + "m"
                 cur.execute("SELECT id FROM subject_test WHERE subject_name = '" + n32[0] + "'")
                 sid = cur.fetchone()
                 cur.execute("SELECT id FROM type_test WHERE type_name = '" + n32[1] + "'")
@@ -200,7 +218,11 @@ with (sq.connect("shedule.db") as con):
                 cur.execute(
                     "SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "'")
                 clid = cur.fetchone()
-                print(lid[0], ' ', sid[0], ' ', tid[0], ' ', tcid[0], ' ', clid[0], ' ', a)
+                if check == 1:
+                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная', note)
+                else:
+                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная')
+
 
     # for i in range(0, 24):
     #

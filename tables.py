@@ -3,6 +3,9 @@ import sqlite3 as sq
 with (sq.connect("shedule.db") as con):
     cur = con.cursor()
 
+    cur.execute("DROP TABLE schedule_test")
+    con.commit()
+
     cur.execute("""CREATE TABLE IF NOT EXISTS day_test(
        id INT PRIMARY KEY,
        day_name TEXT,
@@ -51,9 +54,9 @@ with (sq.connect("shedule.db") as con):
                    class_id INT,
                    day_id INT,
                    lesson_id INT,
-                   classroom_id INT,
                    subject_id INT,
                    type_id INT,
+                   classroom_id INT,
                    teacher_id INT,
                    status TEXT,
                    note TEXT);
