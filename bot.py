@@ -6,8 +6,8 @@ from telebot import types
 
 bot = telebot.TeleBot('6498800576:AAEQZltiZ9HPheX39PXgLmnImqsABhVL-xs')
 
-main_sql = 'SELECT schedule_id, class_name, week_parity, day_name, lesson_start, lesson_end, classroom_number, classroom_address, subject_name, type_name, teacher_name, note FROM schedule JOIN class ON schedule.class_id = class.class_id JOIN week ON schedule.week_id = week.week_id JOIN day ON schedule.day_id = day.day_id JOIN lesson ON schedule.lesson_id = lesson.lesson_id JOIN classroom ON schedule.classroom_id = classroom.classroom_id JOIN subject ON schedule.subject_id = subject.subject_id JOIN type ON schedule.type_id = type.type_id JOIN teacher ON schedule.teacher_id = teacher.teacher_id WHERE schedule.class_id = '
-day_sql = ' AND day.day_id ='
+main_sql = 'SELECT class_name, day_name, lesson_time, classroom_name, classroom_address, subject_name, type_name, teacher_name, status, note FROM schedule_test JOIN class_test ON schedule_test.class_id = class_test.id JOIN day_test ON schedule_test.day_id = day_test.id JOIN lesson_test ON schedule_test.lesson_id = lesson_test.id JOIN classroom_test ON schedule_test.classroom_id = classroom_test.id JOIN subject_test ON schedule_test.subject_id = subject_test.id JOIN type_test ON schedule_test.type_id = type_test.id JOIN teacher_test ON schedule_test.teacher_id = teacher_test.id WHERE schedule_test.class_id = '
+day_sql = ' AND day_test.id ='
 pin = '123'
 
 
@@ -48,18 +48,18 @@ def start(message):
             parity = cur.fetchall()
             info = ''
             for row in parity:
-                info += f'{row[0]}: {row[1]}\n'
-            bot.send_message(message.chat.id, text=info)
+                info += f'<code>{row[0]}:</code> {row[1]}\n'
+            bot.send_message(message.chat.id, text=info, parse_mode='html')
 
         elif callback.data == 'time':
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
-            cur.execute("SELECT lesson_id, lesson_start, lesson_end FROM lesson WHERE lesson_id < 9")
+            cur.execute("SELECT id, lesson_time FROM lesson_test WHERE id < 9")
             lesson = cur.fetchall()
             info = ''
             for row in lesson:
-                info += f'{row[0]} пара: с {row[1]} по {row[2]}\n'
-            bot.send_message(message.chat.id, text=info)
+                info += f'<code>{row[0]} пара:</code> {row[1]}\n'
+            bot.send_message(message.chat.id, text=info, parse_mode='html')
 
         elif callback.data == '22ПИ1':
 
@@ -85,7 +85,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
@@ -98,7 +98,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -113,7 +113,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
@@ -126,7 +126,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -141,7 +141,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
@@ -154,7 +154,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -169,7 +169,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
@@ -182,7 +182,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -198,7 +198,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
@@ -211,7 +211,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -227,7 +227,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
@@ -240,7 +240,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -270,7 +270,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
@@ -283,7 +283,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -299,7 +299,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
@@ -312,7 +312,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -329,7 +329,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
@@ -342,7 +342,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -358,7 +358,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
@@ -371,7 +371,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -387,7 +387,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
@@ -400,7 +400,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -416,7 +416,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
@@ -429,7 +429,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -472,7 +472,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -488,7 +488,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
@@ -501,7 +501,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -517,7 +517,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
@@ -530,7 +530,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -546,7 +546,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
@@ -559,7 +559,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -575,7 +575,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
@@ -588,7 +588,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -604,7 +604,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
@@ -617,7 +617,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -649,7 +649,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
@@ -662,7 +662,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -678,7 +678,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
@@ -691,7 +691,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -707,7 +707,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
@@ -720,7 +720,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -736,7 +736,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
@@ -749,7 +749,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -765,7 +765,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
@@ -778,7 +778,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -795,7 +795,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на субботу')
@@ -808,7 +808,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -824,7 +824,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
@@ -837,7 +837,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -869,7 +869,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
@@ -882,7 +882,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -898,7 +898,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
@@ -911,7 +911,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -927,7 +927,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
@@ -940,7 +940,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -956,7 +956,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
@@ -969,7 +969,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -985,7 +985,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
@@ -998,7 +998,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1014,7 +1014,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на субботу')
@@ -1027,7 +1027,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1043,7 +1043,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
@@ -1056,7 +1056,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1089,7 +1089,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
@@ -1102,7 +1102,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1118,7 +1118,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на вторник')
@@ -1131,7 +1131,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1147,7 +1147,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
@@ -1160,7 +1160,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1176,7 +1176,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на четверг')
@@ -1189,7 +1189,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1205,7 +1205,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
@@ -1218,7 +1218,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1234,7 +1234,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на субботу')
@@ -1247,7 +1247,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1263,7 +1263,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
@@ -1276,7 +1276,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1285,11 +1285,13 @@ def start(message):
 
             markup = types.InlineKeyboardMarkup()
             dw1 = types.InlineKeyboardButton('Понедельник', callback_data='Monday201')
-            dw2 = types.InlineKeyboardButton('Среда', callback_data='Wednesday201')
-            markup.row(dw1, dw2)
-            dw3 = types.InlineKeyboardButton('Пятница', callback_data='Friday201')
-            dw4 = types.InlineKeyboardButton('Вся неделя', callback_data='Week201')
-            markup.row(dw3, dw4)
+            dw2 = types.InlineKeyboardButton('Вторник', callback_data='Tuesday201')
+            dw3 = types.InlineKeyboardButton('Среда', callback_data='Wednesday201')
+            markup.row(dw1, dw2, dw3)
+            dw4 = types.InlineKeyboardButton('Четверг', callback_data='Thursday201')
+            dw5 = types.InlineKeyboardButton('Пятница', callback_data='Friday201')
+            dw6 = types.InlineKeyboardButton('Вся неделя', callback_data='Week201')
+            markup.row(dw4, dw5, dw6)
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Выберите день недели', reply_markup=markup)
 
@@ -1304,7 +1306,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
@@ -1317,7 +1319,36 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
+
+        elif callback.data == 'Tuesday201':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more201tu')
+            markup.row(m)
+
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(7) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text='Ваше расписание на понедельник')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more201tu':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(7) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1333,7 +1364,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
@@ -1346,7 +1377,36 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
+
+        elif callback.data == 'Thursday201':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more201th')
+            markup.row(m)
+
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(7) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text='Ваше расписание на понедельник')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more201th':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(7) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1362,7 +1422,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
@@ -1375,7 +1435,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1391,7 +1451,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
@@ -1404,7 +1464,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1413,11 +1473,13 @@ def start(message):
 
             markup = types.InlineKeyboardMarkup()
             dw1 = types.InlineKeyboardButton('Понедельник', callback_data='Monday202')
-            dw2 = types.InlineKeyboardButton('Среда', callback_data='Wednesday202')
-            markup.row(dw1, dw2)
-            dw3 = types.InlineKeyboardButton('Пятница', callback_data='Friday202')
-            dw4 = types.InlineKeyboardButton('Вся неделя', callback_data='Week202')
-            markup.row(dw3, dw4)
+            dw2 = types.InlineKeyboardButton('Вторник', callback_data='Tuesday202')
+            dw3 = types.InlineKeyboardButton('Среда', callback_data='Wednesday202')
+            markup.row(dw1, dw2, dw3)
+            dw4 = types.InlineKeyboardButton('Четверг', callback_data='Thursday202')
+            dw5 = types.InlineKeyboardButton('Пятница', callback_data='Friday202')
+            dw6 = types.InlineKeyboardButton('Вся неделя', callback_data='Week202')
+            markup.row(dw4, dw5, dw6)
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Выберите день недели', reply_markup=markup)
 
@@ -1432,7 +1494,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на понедельник')
@@ -1445,7 +1507,36 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
+
+        elif callback.data == 'Tuesday202':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more202tu')
+            markup.row(m)
+
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(8) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text='Ваше расписание на понедельник')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more202tu':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(8) + day_sql + str(2))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1461,7 +1552,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на среду')
@@ -1474,7 +1565,36 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text=info, parse_mode='html')
+
+        elif callback.data == 'Thursday202':
+            markup = types.InlineKeyboardMarkup()
+            m = types.InlineKeyboardButton('❔ Подробнее', callback_data='more202th')
+            markup.row(m)
+
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(8) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
+
+            bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                                  text='Ваше расписание на понедельник')
+            bot.send_message(message.chat.id, info, parse_mode='html', reply_markup=markup)
+
+        elif callback.data == 'more202th':
+            with sq.connect("shedule.db") as con:
+                cur = con.cursor()
+            cur.execute(main_sql + str(8) + day_sql + str(4))
+            pi221 = cur.fetchall()
+            info = ''
+            for row in pi221:
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1490,7 +1610,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на пятницу')
@@ -1503,7 +1623,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1519,7 +1639,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text='Ваше расписание на всю неделю')
@@ -1532,7 +1652,7 @@ def start(message):
             pi221 = cur.fetchall()
             info = ''
             for row in pi221:
-                info += f'<code>Группа:</code> {row[1]}\n<code>Неделя:</code> {row[2]}\n<code>День:</code> {row[3]}\n<code>Время пары:</code> {row[4]} - {row[5]}\n<code>Аудитория:</code> {row[6]}, {row[7]}\n<code>Дисциплина:</code> {row[8]} — {row[9]}\n<code>Преподаватель:</code> {row[10]}\n<code>Заметка:</code> {row[11]}\n\n'
+                info += f'<code>Группа:</code> {row[0]}\n<code>Статус:</code> {row[8]}\n<code>День:</code> {row[1]}\n<code>Время пары:</code> {row[2]}\n<code>Аудитория:</code> {row[3]}, {row[4]}\n<code>Дисциплина:</code> {row[5]} — {row[6]}\n<code>Преподаватель:</code> {row[7]}\n<code>Заметка:</code> {row[9]}\n\n'
 
             bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
                                   text=info, parse_mode='html')
@@ -1554,7 +1674,7 @@ def start(message):
             class_name = message.text
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
-            cur.execute('SELECT class_id FROM class WHERE class_name = "' + class_name + '"')
+            cur.execute('SELECT id FROM class_test WHERE class_name = "' + class_name + '"')
             class_id = str(cur.fetchone()[0])
 
             msg = bot.send_message(message.chat.id, 'Введите день недели с заглавной буквы (Например: Понедельник)')
@@ -1568,7 +1688,7 @@ def start(message):
             day_name = message.text
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
-            cur.execute('SELECT day_id FROM day WHERE day_name = "' + day_name +'"')
+            cur.execute('SELECT id FROM day_test WHERE day_name = "' + day_name +'"')
             day_id = str(cur.fetchone()[0])
 
             msg = bot.send_message(message.chat.id, 'Введите дисциплину, как в боте, с заглавной буквы(Например: Алгоритмы и структуры данных)')
@@ -1583,7 +1703,7 @@ def start(message):
             subject_name = message.text
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
-            cur.execute('SELECT subject_id FROM subject WHERE subject_name = "' + subject_name + '"')
+            cur.execute('SELECT id FROM subject_test WHERE subject_name = "' + subject_name + '"')
             subject_id = str(cur.fetchone()[0])
 
             msg = bot.send_message(message.chat.id, 'Введите тип с заглавной буквы или "Не имеет значения" ')
@@ -1598,7 +1718,7 @@ def start(message):
             type_name = message.text
             with sq.connect("shedule.db") as con:
                 cur = con.cursor()
-            cur.execute('SELECT type_id FROM type WHERE type_name = "' + type_name + '"')
+            cur.execute('SELECT id FROM type_test WHERE type_name = "' + type_name + '"')
             type_id = str(cur.fetchone()[0])
 
             msg = bot.send_message(message.chat.id,'Введите новую заметку')
@@ -1612,7 +1732,7 @@ def start(message):
         msg_name = message.text
         with sq.connect("shedule.db") as con:
             cur = con.cursor()
-            cur.execute('UPDATE schedule SET note = ? WHERE class_id = ? AND day_id = ? AND subject_id = ? AND type_id = ?', [msg_name, class_id, day_id, subject_id, type_id])
+            cur.execute('UPDATE schedule_test SET note = ? WHERE class_id = ? AND day_id = ? AND subject_id = ? AND type_id = ?', [msg_name, class_id, day_id, subject_id, type_id])
             con.commit
 
         bot.send_message(message.chat.id, 'Заметка добавлена')

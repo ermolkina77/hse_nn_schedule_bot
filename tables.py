@@ -3,8 +3,6 @@ import sqlite3 as sq
 with (sq.connect("shedule.db") as con):
     cur = con.cursor()
 
-    cur.execute("DELETE FROM schedule_test WHERE class_id = 4")
-
     cur.execute("""CREATE TABLE IF NOT EXISTS day_test(
        id INT PRIMARY KEY,
        day_name TEXT,
