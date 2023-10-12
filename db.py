@@ -140,28 +140,28 @@ with (sq.connect("shedule.db") as con):
     gr = ['E', 'H', 'K']
     gr1 = ['F', 'I', 'L']
     grid = 1
-    for i in range(0, 12):
+    for i in range(0, 24):
         check = 0
         if (pl + i) >= 20 and (pl + i) <= 22:
             dw = 1
-        elif (pl + i) == 23:
+        elif (pl + i) >= 23 and (pl + i) <= 25:
             dw = 2
-        elif (pl + i) == 24:
+        elif (pl + i) >= 26 and (pl + i) <= 27:
             dw = 3
-        elif (pl + i) >= 25 and (pl + i) <= 29:
+        elif (pl + i) >= 28 and (pl + i) <= 30:
             dw = 4
-        elif (pl + i) >= 30 and (pl + i) <= 31:
+        elif (pl + i) >= 31 and (pl + i) <= 33:
             dw = 5
 
-        n3 = wsheet[0].get('E' + str(pl + i))
+        n3 = wsheet[2].get('H' + str(pl + i))
         if len(n3) > 0:
-            n2 = wsheet[0].get('C' + str(pl+i))[0][0]
+            n2 = wsheet[2].get('C' + str(pl+i))[0][0]
             n31 = n3[0][0]
             n32 = n31.split('  ')
-            n4 = wsheet[0].get('F' + str(pl + i))
+            n4 = wsheet[2].get('I' + str(pl + i))
             n41 = n4[0][0]
             n42 = n41.split('  ')
-            cur.execute("SELECT class_code FROM class_test WHERE class_name = '22ПИ1'")
+            cur.execute("SELECT class_code FROM class_test WHERE class_name = '20ПИ2'")
             clcode = cur.fetchone()
             code = clcode[0]
             cur.execute("SELECT day_code FROM day_test WHERE id = " + str(dw))
@@ -177,7 +177,7 @@ with (sq.connect("shedule.db") as con):
                     n42[1] = 'Родионова, 13б'
                 cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
                 lid = cur.fetchone()
-                code = code + str(lid[0]) + "m"
+                code = code + str(lid[0])
                 cur.execute("SELECT id FROM subject_test WHERE subject_name = '" + n32[0] + "'")
                 sid = cur.fetchone()
                 cur.execute("SELECT id FROM type_test WHERE type_name = '" + n32[1] + "'")
@@ -187,9 +187,29 @@ with (sq.connect("shedule.db") as con):
                 cur.execute("SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "' AND classroom_address = '" + n42[1] + "'")
                 clid = cur.fetchone()
                 if check == 1:
-                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная', note)
+                    status = 'Основная'
+
+                    if len(code) == 6:
+                        code = code + 'm'
+
+                    print(code, ' ', 8, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', status, note)
+                    insert = """INSERT INTO schedule_test
+                                                  (id, class_id, day_id, lesson_id, subject_id, type_id, classroom_id, teacher_id, status, note)
+                                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+                    data = (code, 8, dw, lid[0], sid[0], tid[0], clid[0], tcid[0], status, note)
+                    cur.execute(insert, data)
+                    con.commit()
                 else:
-                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная')
+                    code = code + 'm'
+                    print(code, ' ', 8, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная')
+                    insert = """INSERT INTO schedule_test
+                                                        (id, class_id, day_id, lesson_id, subject_id, type_id, classroom_id, teacher_id, status)
+                                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+                    data = (code, 8, dw, lid[0], sid[0], tid[0], clid[0], tcid[0], 'Основная')
+                    cur.execute(insert, data)
+                    con.commit()
             elif len(n32) == 1 & len(n42) == 1:
                 a = [dw, n2, n32[0], n42[0]]
                 cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
@@ -201,9 +221,23 @@ with (sq.connect("shedule.db") as con):
                     "SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "'")
                 clid = cur.fetchone()
                 if check == 1:
-                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', clid[0], ' ', 'Основная',  note)
+                    print(code, ' ', 8, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', clid[0], ' ', 'Основная',  note)
+                    insert = """INSERT INTO schedule_test
+                                                        (id, class_id, day_id, lesson_id, subject_id, classroom_id, status, note)
+                                                        VALUES (?, ?, ?, ?, ?, ?, ?);"""
+
+                    data = (code, 8, dw, lid[0], sid[0], clid[0], 'Основная', note)
+                    cur.execute(insert, data)
+                    con.commit()
                 else:
-                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', clid[0], ' ', 'Основная')
+                    print(code, ' ', 8, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', clid[0], ' ', 'Основная')
+                    insert = """INSERT INTO schedule_test
+                                                                            (id, class_id, day_id, lesson_id, subject_id, classroom_id, status)
+                                                                            VALUES (?, ?, ?, ?, ?, ?, ?);"""
+
+                    data = (code, 8, dw, lid[0], sid[0], clid[0], 'Основная')
+                    cur.execute(insert, data)
+                    con.commit()
             elif len(n32) >= 3 & len(n42) == 1:
                 a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
                 cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
@@ -219,9 +253,23 @@ with (sq.connect("shedule.db") as con):
                     "SELECT id FROM classroom_test WHERE classroom_name = '" + n42[0] + "'")
                 clid = cur.fetchone()
                 if check == 1:
-                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная', note)
+                    print(code, ' ', 8, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная', note)
+                    insert = """INSERT INTO schedule_test
+                                                                      (id, class_id, day_id, lesson_id, subject_id, type_id, classroom_id, teacher_id, status, note)
+                                                                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+                    data = (code, 8, dw, lid[0], sid[0], tid[0], clid[0], tcid[0], 'Основная', note)
+                    cur.execute(insert, data)
+                    con.commit()
                 else:
-                    print(code, ' ', 1, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная')
+                    print(code, ' ', 8, ' ', dw, ' ', lid[0], ' ', sid[0], ' ', tid[0], ' ', clid[0], ' ', tcid[0], ' ', 'Основная')
+                    insert = """INSERT INTO schedule_test
+                                                                      (id, class_id, day_id, lesson_id, subject_id, type_id, classroom_id, teacher_id, status)
+                                                                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+                    data = (code, 8, dw, lid[0], sid[0], tid[0], clid[0], tcid[0], 'Основная')
+                    cur.execute(insert, data)
+                    con.commit()
 
 
     # for i in range(0, 24):
@@ -257,36 +305,36 @@ with (sq.connect("shedule.db") as con):
     #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
     #           print(a)
 
-    # for i in range(0, 14):
-    #
-    #   if (pl + i) >= 20 and (pl + i) <= 22:
-    #      dw = 'Понедельник'
-    #   elif (pl + i) >= 23 and (pl + i) <= 25:
-    #       dw = 'Вторник'
-    #  elif (pl + i) >= 26 and (pl + i) <= 27:
-    #       dw = 'Среда'
-    #   elif (pl + i) >= 28 and (pl + i) <= 30:
-    #       dw = 'Четверг'
-    #   elif (pl + i) >= 31 and (pl + i) <= 33:
-    #       dw = 'Пятница'
-    #
-    #   n3 = wsheet[2].get('H' + str(pl + i))
-    #   if len(n3) > 0:
-    #       n2 = wsheet[2].get('C' + str(pl+i))[0][0]
-    #       n31 = n3[0][0]
-    #       n32 = n31.split('  ')
-    #       n4 = wsheet[2].get('I' + str(pl + i))
-    #       n41 = n4[0][0]
-    #       n42 = n41.split('  ')
-    #       if len(n32) >= 3 & len(n42) == 2:
-    #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0], n42[1]]
-    #           print(a)
-    #       elif len(n32) == 1 & len(n42) == 1:
-    #           a = [dw, n2, n32[0], n42[0]]
-    #           print(a)
-    #       elif len(n32) >= 3 & len(n42) == 1:
-    #           a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
-    #           print(a)
+    #for i in range(0, 14):
+
+     #   if (pl + i) >= 20 and (pl + i) <= 22:
+    #      dw = 1
+     #   elif (pl + i) >= 23 and (pl + i) <= 25:
+      #      dw = 2
+    #    elif (pl + i) >= 26 and (pl + i) <= 27:
+     #       dw = 3
+     #   elif (pl + i) >= 28 and (pl + i) <= 30:
+     #       dw = 4
+      #  elif (pl + i) >= 31 and (pl + i) <= 33:
+     #       dw = 5
+
+    #    n3 = wsheet[2].get('E' + str(pl + i))
+     #   if len(n3) > 0:
+      #      n2 = wsheet[2].get('C' + str(pl+i))[0][0]
+       #     n31 = n3[0][0]
+        #    n32 = n31.split('  ')
+         #   n4 = wsheet[2].get('F' + str(pl + i))
+     #       n41 = n4[0][0]
+     #       n42 = n41.split('  ')
+      #      if len(n32) >= 3 & len(n42) == 2:
+       #         a = [dw, n2, n32[0], n32[1], n32[2], n42[0], n42[1]]
+       #         print(a)
+        #    elif len(n32) == 1 & len(n42) == 1:
+        #        a = [dw, n2, n32[0], n42[0]]
+         #       print(a)
+        #    elif len(n32) >= 3 & len(n42) == 1:
+         #       a = [dw, n2, n32[0], n32[1], n32[2], n42[0]]
+          #      print(a)
 
     # cur.execute("SELECT * FROM class_test")
     # print(cur.fetchall())
