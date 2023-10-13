@@ -14,25 +14,25 @@ with (sq.connect("shedule.db") as con):
     l2 = len(group2)
     ld = len(day)
 
-    # ДОБАВЛЕНИЕ ДНЕЙ НЕДЕЛИ
-    # for i in range(0, ld):
-    #   res = str(wsheet[0].get(day[i])[0][0])
-    #   cur.execute("SELECT day_name FROM day_test WHERE day_name = '" + res + "'")
-    #   check = cur.fetchall()
-    #   if res == 'Понедельник':
-    #       c = 'mo'
-    #   elif res == 'Вторник':
-    #       c = 'tu'
-    #   elif res == 'Среда':
-    #       c = 'we'
-    #   elif res == 'Четверг':
-    #       c = 'th'
-    #   elif res == 'Пятница':
-    #       c = 'fr'
-    #   elif res == 'Суббота':
-    #       c = 'su'
-    #   if len(check) == 0:
-    #       cur.execute("INSERT INTO day_test (id, day_name, day_code) VALUES  (" + str(i + 1) + ", '" + res + "', '" + c + "')")
+    for i in range(0, ld):
+        res = str(wsheet[0].get(day[i])[0][0])
+        cur.execute("SELECT day_name FROM day_test WHERE day_name = '" + res + "'")
+        check = cur.fetchall()
+        if res == 'Понедельник':
+            c = 'mo'
+        elif res == 'Вторник':
+            c = 'tu'
+        elif res == 'Среда':
+            c = 'we'
+        elif res == 'Четверг':
+            c = 'th'
+        elif res == 'Пятница':
+            c = 'fr'
+        elif res == 'Суббота':
+            c = 'su'
+        if len(check) == 0:
+            cur.execute("INSERT INTO day_test (id, day_name, day_code) VALUES  (" + str(
+                i + 1) + ", '" + res + "', '" + c + "')")
 
     # ДОБАВЛЕНИЕ ГРУПП
     # for i in range(0, l2):
@@ -40,7 +40,7 @@ with (sq.connect("shedule.db") as con):
     #   c = res[0] + res[1] + res[4]
     #   cur.execute('SELECT id FROM class_test WHERE id = ' + str(i + 1))
     #   check = cur.fetchall()
-    #   if len(check) == 0:
+    #  if len(check) == 0:
     #       cur.execute("INSERT INTO class_test (id, class_name, class_code) VALUES  (" + str(i + 1) + ", '" + res + "', '" + c + "')")
 
     # for i in range(0, l2):
@@ -48,7 +48,7 @@ with (sq.connect("shedule.db") as con):
     #   c = res[0] + res[1] + res[4]
     #   cur.execute('SELECT id FROM class_test WHERE id = ' + str(i + 4))
     #   check = cur.fetchall()
-    #   if len(check) == 0:
+    #  if len(check) == 0:
     #       cur.execute("INSERT INTO class_test (id, class_name, class_code) VALUES  (" + str(i + 4) + ", '" + res + "', '" + c + "')")
 
     # group4 = ['E18', 'H18']
@@ -58,18 +58,18 @@ with (sq.connect("shedule.db") as con):
     #   c = res[0] + res[1] + res[4]
     #   cur.execute('SELECT id FROM class_test WHERE id = ' + str(i + 7))
     #   check = cur.fetchall()
-    #   if len(check) == 0:
-    #       cur.execute("INSERT INTO class_test (id, class_name, class_code) VALUES  (" + str(i + 7) + ", '" + res + "', '" + c + "')")
+    #  if len(check) == 0:
+    #      cur.execute("INSERT INTO class_test (id, class_name, class_code) VALUES  (" + str(i + 7) + ", '" + res + "', '" + c + "')")
 
     # ДОБАВЛЕНИЕ ЧАСОВ ПАР
     # time = ['C46', 'C47', 'C48', 'C49', 'C50', 'C51', 'C52', 'C53', 'C28', 'C33']
     # tl = len(time)
     # for i in range(0, tl):
-    #   res = str(wsheet[0].get(time[i])[0][0])
+    #  res = str(wsheet[0].get(time[i])[0][0])
     #   cur.execute("SELECT lesson_time FROM lesson_test WHERE lesson_time = '" + res + "'")
     #   check = cur.fetchall()
     #   if len(check) == 0:
-    #       cur.execute("INSERT INTO lesson_test (id, lesson_time) VALUES  (" + str(i + 1) + ", '" + res + "')")
+    #      cur.execute("INSERT INTO lesson_test (id, lesson_time) VALUES  (" + str(i + 1) + ", '" + res + "')")
 
     # ДОБАВЛЕНИЕ ПАР, ТИПА И ПРЕПОДАВАТЕЛЯ
     # sub_id = 1
@@ -77,40 +77,40 @@ with (sq.connect("shedule.db") as con):
     # type_id = 1
 
     # for p in range(0, 3):
-    #    values_list = wsheet[p].get('E20:E63')
-    #   k = len(values_list)
-
-    #   for i in range(0, k):
-    #       if len(values_list[i]) != 0:
-    #           data = values_list[i][0]
-    #           res = data.split('  ')
-
-    #           cur.execute("SELECT subject_name FROM subject_test WHERE subject_name = '" + res[0] + "'")
-    #           check = cur.fetchall()
-    #           if len(check) == 0:
-    #               cur.execute(
-    #                   "INSERT INTO subject_test (id, subject_name) VALUES  (" + str(sub_id) + ", '" + res[0] + "')")
-    #               sub_id = sub_id + 1
+    #  values_list = wsheet[p].get('E20:E63')
+    #  k = len(values_list)
     #
-    #               cur.execute("SELECT type_name FROM type_test WHERE type_name = '" + res[1] + "'")
-    #               check = cur.fetchall()
-    #               if len(check) == 0:
-    #                   cur.execute(
-    #                       "INSERT INTO type_test (id, type_name) VALUES  (" + str(type_id) + ", '" + res[1] + "')")
-    #                   type_id = type_id + 1
+    #  for i in range(0, k):
+    #      if len(values_list[i]) != 0:
+    #          data = values_list[i][0]
+    #          res = data.split('  ')
 
-    #               cur.execute("SELECT teacher_name FROM teacher_test WHERE teacher_name = '" + res[2] + "'")
-    #               check = cur.fetchall()
-    #               if len(check) == 0:
-    #                   cur.execute(
-    #                       "INSERT INTO teacher_test (id, teacher_name) VALUES  (" + str(t_id) + ", '" + res[2] + "')")
-    #                   t_id = t_id + 1
+    #          cur.execute("SELECT subject_name FROM subject_test WHERE subject_name = '" + res[0] + "'")
+    #          check = cur.fetchall()
+    #          if len(check) == 0:
+    #              cur.execute(
+    #                  "INSERT INTO subject_test (id, subject_name) VALUES  (" + str(sub_id) + ", '" + res[0] + "')")
+    #              sub_id = sub_id + 1
+
+    #              cur.execute("SELECT type_name FROM type_test WHERE type_name = '" + res[1] + "'")
+    #              check = cur.fetchall()
+    #              if len(check) == 0:
+    #                  cur.execute(
+    #                      "INSERT INTO type_test (id, type_name) VALUES  (" + str(type_id) + ", '" + res[1] + "')")
+    #                  type_id = type_id + 1
+
+    #              cur.execute("SELECT teacher_name FROM teacher_test WHERE teacher_name = '" + res[2] + "'")
+    #              check = cur.fetchall()
+    #              if len(check) == 0:
+    #                  cur.execute(
+    #                      "INSERT INTO teacher_test (id, teacher_name) VALUES  (" + str(t_id) + ", '" + res[2] + "')")
+    #                  t_id = t_id + 1
 
     # ДОБАВЛЕНИЕ АУДИТОРИЙ
     # r_id = 1
     # for p in range(0, 3):
-    #   values_list = wsheet[p].get('F20:F43')
-    #   k = len(values_list)
+    #  values_list = wsheet[p].get('F20:F43')
+    #  k = len(values_list)
 
     #   for i in range(0, k):
     #       if len(values_list[i]) != 0:
@@ -121,7 +121,7 @@ with (sq.connect("shedule.db") as con):
     #               if res[1] == 'Л':
     #                   address = 'Львовская, 1В'
     #               if res[1] == 'Р':
-    #                   address = 'Родионова, 13б'
+    #                   address = 'Родионова, 136'
     #               cur.execute("SELECT classroom_name, classroom_address FROM classroom_test WHERE classroom_name = '" + res[0] + "' AND classroom_address = '" + address + "'")
     #               check = cur.fetchall()
     #               if len(check) == 0:
@@ -176,7 +176,7 @@ with (sq.connect("shedule.db") as con):
                 if n42[1] == 'Л':
                     n42[1] = 'Львовская, 1В'
                 elif n42[1] == 'Р':
-                    n42[1] = 'Родионова, 13б'
+                    n42[1] = 'Родионова, 136'
                 cur.execute("SELECT id FROM lesson_test WHERE lesson_time = '" + n2 + "'")
                 lid = cur.fetchone()
                 code = code + str(lid[0])
@@ -321,4 +321,4 @@ with (sq.connect("shedule.db") as con):
 
     # cur.execute("SELECT * FROM day_test")
     # print(cur.fetchall())
-    con.commit()
+    # con.commit()
